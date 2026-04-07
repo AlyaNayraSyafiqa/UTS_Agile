@@ -18,7 +18,7 @@ jobs:
           php-version: '8.2'
       - name: Check PHP syntax
         run: |
-          echo "Memeriksa semua file PHP..."
+          echo "Memeriksa semua file PHP di root dan folder pages..."
           for file in $(find . -name "*.php"); do
             php -l $file || exit 1
           done
@@ -37,7 +37,7 @@ jobs:
         run: |
           test -f style.css && echo "style.css OK" || (echo "style.css tidak ditemukan" && exit 1)
 
-  # ============ Cek Semua Halaman Wajib ============
+  # ============ Cek Semua Halaman Wajib (di folder pages) ============
   check-pages:
     name: Check All Required Pages
     runs-on: ubuntu-latest
@@ -45,10 +45,13 @@ jobs:
       - uses: actions/checkout@v4
       - name: Check required pages
         run: |
-          echo "Memeriksa halaman wajib..."
-          for page in home.php tentang.php ekosistem.php investor.php karir.php kontak.php index.php; do
-            test -f $page && echo "$page OK" || (echo "$page hilang" && exit 1)
+          echo "Memeriksa halaman wajib di folder pages..."
+          for page in home.php tentang.php ekosistem.php investor.php karir.php kontak.php; do
+            test -f "pages/$page" && echo "pages/$page OK" || (echo "pages/$page hilang" && exit 1)
           done
+          echo "Memeriksa index.php di root..."
+          test -f index.php && echo "index.php OK" || (echo "index.php hilang" && exit 1)
+          echo "Semua halaman lengkap"
 
   # ============ Cek Debug Code ============
   no-debug:
